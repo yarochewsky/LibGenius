@@ -16,10 +16,10 @@ AjaxGetPromise = function(url) {
     xhr.open("GET", url, true);
     xhr.send();
   });
-}
+};
 
 AjaxPostPromise = function(url, data) {
-  return new Promise(function(resolve, reject)) {
+  return new Promise(function(resolve, reject) {
     var xhr = new XMLHttpRequest();
     var postData = FormData();
     for(key in data) {
@@ -37,5 +37,5 @@ AjaxPostPromise = function(url, data) {
     }
     xhr.open("POST", url, true);
     xhr.send(postData);
-  }
-}
+  });
+};

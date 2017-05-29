@@ -13,6 +13,60 @@ body {
   background-attachment: fixed;
   text-align: center;
   font-family: 'Work Sans', sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal {
+  position: fixed;
+  z-index: 1;
+  left: 10%;
+  top: 100px;
+  width: 80%;
+  height: 80%;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+button.modal-close {
+  float: left;
+  margin-left: 20px;
+  margin-top: 20px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url("x-button.png");
+  width: 50px;
+  height: 50px;
+  background-color: rgba(255, 255, 255, 0);
+  border: 0;
+}
+
+button.modal-close, button.modal-open {
+  cursor: pointer;
+}
+
+button.modal-close:focus, button.modal-open {
+  outline: none;
+}
+
+button.modal-open {
+  font-size: 22pt;
+  background: none;
+  border: none;
+  color: white;
+  width: 100%;
+  margin-top: 2px;
+}
+/*button.modal-close:hover{
+  outline-color: #cc2121;
+}*/
+
+.modal-content {
+  margin-top: 100px;
+  color: white;
+  margin-left: 10px;
+  margin-right: 10px;
+  overflow: scroll;
+  max-height: 80%;
 }
 
 div#searcharea {
@@ -33,6 +87,8 @@ div#records {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  margin-left: 120px;
+  justify-content: flex-start;
 }
 
 h1, h2, footer, div#result {
@@ -58,8 +114,11 @@ footer {
   margin-right: auto;
   width: 100%;
   padding: 0px;
-  position: absolute;
-  bottom: 5px;
+  margin-top: 100px;
+}
+
+.footer-results-mode {
+  color: black;
 }
 
 .search {
@@ -74,7 +133,6 @@ button.search {
   border: 0px;
   color: white;
   background-color: #cc2121;
-  /*background-color: #502b6b;*/
   margin-left: 5px;
 }
 
@@ -115,14 +173,19 @@ input.search, record-title {
   background-color: rgba(0, 0, 0, 0.2)
 }
 
-.record-title {
+span.record-title {
   color: white;
-  font-size: 25pt;
-  margin-top: 30%;
+  font-size: 20pt;
+  margin-top: 60px;
+  overflow: hidden;
 }
 
-.record-description, span#number-found {
+.record-description, div#number-found {
   color: black;
+}
+
+div#number-found {
+  margin-bottom: 50px;
 }
 
 .record-description {
@@ -132,8 +195,16 @@ input.search, record-title {
   display: none;
   height: 100%;
   width: 100%;
-  overflow: hidden;
   background-color: rgba(0, 0, 0, 0.6);
+}
+
+.record-description-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 30px;
+  max-height: 50%;
+  margin: auto;
+  max-width: 90%;
 }
 
 .record {

@@ -39,10 +39,10 @@ Special Collections
   // searches for matches of the typed string on the special collections
   // database.
   function search() {
-    setResultsView();
-    $("loading").classList.remove("hidden");
     var queryString = $("query").value;
     if(queryString) {
+      setResultsView();
+      $("loading").classList.remove("hidden");
       var processedQueryString = queryString.replace(/ /g, "+");
       var collectionInfo = getCollectionSize(collectionName);
       collectionInfo
@@ -52,10 +52,13 @@ Special Collections
           items
             .then(function(matches) {
               $("records").innerHTML = ""; //clear previous results, if any
-              $("loading").classList.add("hidden"); // start loading animation
               // dispplay number of records found
               $("number-found").innerHTML = matches.records.length + " results";
-              populateResults(matches.records);
+              for(var i = 0; i < matches.records.length; i++) {
+                populateResults(matches.records[i]);
+              }
+              // populateResults(matches.records);
+              $("loading").classList.add("hidden"); // stop loading animation
               // unlock UI for new search
               $("query").disabled = false;
               $("query").value = "";
@@ -75,7 +78,7 @@ Special Collections
     $("titles").classList.add("hidden");
     $("query").disabled = true;
     $("go-search").disabled = true;
-    $("copyright").classList.add("hidden");
+    $("copyright").classList.add("footer-results-mode");
     $("searcharea").classList.add("results-mode");
     $("results").classList.remove("hidden");
     $("query").classList.remove("search-onboard-mode");
@@ -83,40 +86,119 @@ Special Collections
     document.body.style.backgroundImage = "none";
   }
 
-  // gets an object with all the matches retrieved from the query, and populates
-  // the results container with the matches from this query.
-  function populateResults(items) {
-    for(var i = 0; i < items.length; i++) {
-      var title = items[i].title;
-      getThumbnail(collectionName, items[i].pointer);
+  function populateResults(item) {
+    var title = item.title;
 
-      var itemContainer = document.createElement("div");
-      itemContainer.classList.add("record");
+    var itemContainer = document.createElement("div");
+    itemContainer.classList.add("record");
 
-      var itemContainerTitle = document.createElement("div");
-      var overlay = document.createElement("div");
-      overlay.classList.add("record-title-overlay");
-      itemContainer.appendChild(overlay);
-      itemContainerTitle.innerHTML = title;
-      itemContainerTitle.classList.add("record-title");
-      overlay.appendChild(itemContainerTitle);
-
-      // either display custom description by archivist, or original description
-      // if the former is not available
-      var description = items[i].clip ? items[i].clip : items[i].filmvi;
-      description = description ? description : "no description available for this clip.";
-      var itemContainerDescription = document.createElement("div");
-      itemContainerDescription.innerHTML = description;
-      itemContainerDescription.classList.add("record-description");
-      itemContainer.appendChild(itemContainerDescription);
-
-
-      var imagePath = "./images/" + items[i].pointer + ".jpg";
-      itemContainer.style.backgroundImage = "url(" + imagePath + ")";
+    var image = new Image();
+    image.onload = function() {
+      itemContainer.style.backgroundImage = "url(" + image.src + ")";
       $("records").appendChild(itemContainer);
-    }
+    };
+    var imagePath = "https://cdm16786.contentdm.oclc.org/utils/getthumbnail/collection/filmarch/id/" + item.pointer + "/json";
+    image.src = imagePath;
+
+    var itemContainerTitle = document.createElement("span");
+    var overlay = document.createElement("div");
+    overlay.classList.add("record-title-overlay");
+    itemContainer.appendChild(overlay);
+    itemContainerTitle.innerHTML = title;
+    itemContainerTitle.classList.add("record-title");
+    overlay.appendChild(itemContainerTitle);
+
+    // either display custom description by archivist, or original description
+    // if the former is not available
+    var description = item.clip ? item.clip : item.filmvi;
+    description = description ? description : "no description available for this clip.";
+    var itemContainerDescription = document.createElement("div");
+    itemContainerDescription.classList.add("record-description");
+
+    var descriptionText = document.createElement("p");
+    descriptionText.innerHTML = description;
+    descriptionText.classList.add("record-description-text");
+    itemContainerDescription.appendChild(descriptionText);
+
+    itemContainer.appendChild(itemContainerDescription);
+
+    var info = document.createElement("div");
+    info.classList.add("modal");
+    info.classList.add("hidden");
+    var closeButton = document.createElement("button");
+    closeButton.classList.add("modal-close");
+    closeButton.onclick = function() {
+      info.classList.toggle("hidden");
+    };
+    info.appendChild(closeButton);
+
+    // insert animation inside modal to show loading...
+    var openButton = document.createElement("button");
+    openButton.innerText = "More";
+    openButton.classList.add("modal-open");
+    openButton.onclick = function() {
+      info.classList.toggle("hidden");
+      var itemMetadata = getItemInfo(collectionName, item.pointer);
+      itemMetadata
+        .then(function(response) {
+          var fileSize = response.cdmfilesizeformatted;
+          var source = response.creato;
+          var digitalCollection = response.digita;
+          var digitalReproduction = response.digitb;
+          var language = response.langub;
+          var location = response.locati;
+          var date = response.type;
+          var order = response.order;
+          var reproductionMessage = response.orderi;
+          var copyright = response.righta;
+          var modalContent = document.createElement("div");
+          modalContent.classList.add("modal-content");
+
+          if(response.clip.length > 0) {
+            modalContent.innerHTML += response.clip;
+          } else {
+            modalContent.innerHTML += response.filmvi;
+          }
+          var itemKeys = Object.keys(response);
+          for(var i = 0; i < itemKeys.length; i++) {
+            modalContent.innerHTML += response[itemKeys[i]];
+          }
+          info.appendChild(modalContent);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    };
+    var playButton = document.createElement("button");
+    playButton.innerText = "Play";
+    playButton.classList.add("modal-open");
+    playButton.onclick = function() {
+      playButton(item.find);
+    };
+    itemContainerDescription.appendChild(playButton);
+
+    var downloadButton = document.createElement("button");
+    downloadButton.innerText = "Download";
+    downloadButton.classList.add("modal-open");
+    itemContainerDescription.appendChild(downloadButton);
+    downloadButton.onclick = function() {
+      download(item.pointer);
+    };
+    itemContainerDescription.appendChild(openButton);
+    itemContainer.appendChild(info);
   }
 
+
+  // downloads a video, given an id for the item
+  function download(itemId) {
+    var endpointString = ("getfile/collection/filmarch/id/" + itemId);
+    var requestItem = new AjaxGetPromise(API_SITE + endpointString);
+      .then(function(response)) {
+        alert("download finished");
+      });
+  }
+
+  // MAKE THIS SEARCH SMARTER!!! SEARCH FOR "OR" INSTEAD OF AND TO FIND BETTER RESULTS
   // given a query string, searches for the record that matches the parameters,
   // and if successful, returns an object with the item's pointer, filetype,
   // and find property.
@@ -149,34 +231,17 @@ Special Collections
       });
   }
 
-  // given a collection name and an item id, downloads the thumbanil image
-  // of that item to the images folder
-  function getThumbnail(collectionName, pointer) {
-    var endpointString = ("getthumbnail/collection/" + collectionName
-                            + "/id/" + pointer);
-    var picture = API_SITE + endpointString;
-    var data = {"image" : picture, "pointer" : pointer};
-    var saveImage = new AjaxPostPromise("./saveimage.php", data);
-    saveImage
-      .then(function() {
-        console.log("saved image");
-      })
-      .catch(function() {
-        console.log("cant save image");
-      });
-  }
-
-    // function getItemInfo(collectionName, itemPointer) {
-    //   var endpointString = ("dmGetItemInfo/" + collectionName + "/" +
-    //                         itemPointer + "/json");
-    //   var itemRequest = new AjaxGetPromise(API_URL + endpointString);
-    //   return itemRequest
-    //     .then(function(response) {
-    //       return JSON.parse(response);
-    //     })
-    //     .catch(function(error) {
-    //       return error;
-    //     });
-    // }
+    function getItemInfo(collectionName, itemPointer) {
+      var endpointString = ("dmGetItemInfo/" + collectionName + "/" +
+                            itemPointer + "/json");
+      var itemRequest = new AjaxGetPromise(API_URL + endpointString);
+      return itemRequest
+        .then(function(response) {
+          return JSON.parse(response);
+        })
+        .catch(function(error) {
+          return error;
+        });
+    }
 
 })();
