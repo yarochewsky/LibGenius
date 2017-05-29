@@ -192,10 +192,8 @@ Special Collections
   // downloads a video, given an id for the item
   function download(itemId) {
     var endpointString = ("getfile/collection/filmarch/id/" + itemId);
-    var requestItem = new AjaxGetPromise(API_SITE + endpointString);
-      .then(function(response)) {
-        alert("download finished");
-      });
+    var fileSource = API_SITE + endpointString;
+    window.location = fileSource;
   }
 
   // MAKE THIS SEARCH SMARTER!!! SEARCH FOR "OR" INSTEAD OF AND TO FIND BETTER RESULTS
