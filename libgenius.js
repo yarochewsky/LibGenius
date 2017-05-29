@@ -53,7 +53,11 @@ Special Collections
             .then(function(matches) {
               $("records").innerHTML = ""; //clear previous results, if any
               // dispplay number of records found
-              $("number-found").innerHTML = matches.records.length + " results";
+              var resultsPhrasing = "results";
+              if(matches.records.length == 1) {
+                resultsPhrasing = "result";
+              }
+              $("number-found").innerHTML = matches.records.length + resultsPhrasing;
               for(var i = 0; i < matches.records.length; i++) {
                 populateResults(matches.records[i]);
               }
