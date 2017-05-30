@@ -53,9 +53,9 @@ Special Collections
             .then(function(matches) {
               $("records").innerHTML = ""; //clear previous results, if any
               // dispplay number of records found
-              var resultsPhrasing = "results";
+              var resultsPhrasing = " results";
               if(matches.records.length == 1) {
-                resultsPhrasing = "result";
+                resultsPhrasing = " result";
               }
               $("number-found").innerHTML = matches.records.length + resultsPhrasing;
               for(var i = 0; i < matches.records.length; i++) {
@@ -136,15 +136,22 @@ Special Collections
     };
     info.appendChild(closeButton);
 
+    var modalLoadingAnimation = document.createElement("img");
+    modalLoadingAnimation.src = "loader.gif";
+    modalLoadingAnimation.classList.add("hidden");
+    info.appendChild(modalLoadingAnimation);
+
     // insert animation inside modal to show loading...
     var openButton = document.createElement("button");
     openButton.innerText = "More";
     openButton.classList.add("modal-open");
     openButton.onclick = function() {
       info.classList.toggle("hidden");
+      modalLoadingAnimation.classList.toggle("hidden");
       var itemMetadata = getItemInfo(collectionName, item.pointer);
       itemMetadata
         .then(function(response) {
+          modalLoadingAnimation.classList.toggle("hidden");
           var fileSize = response.cdmfilesizeformatted;
           var source = response.creato;
           var digitalCollection = response.digita;
@@ -176,9 +183,9 @@ Special Collections
     var playButton = document.createElement("button");
     playButton.innerText = "Play";
     playButton.classList.add("modal-open");
-    playButton.onclick = function() {
-      playButton(item.find);
-    };
+    // playButton.onclick = function() {
+    //   playButton(item.find);
+    // };
     itemContainerDescription.appendChild(playButton);
 
     var downloadButton = document.createElement("button");

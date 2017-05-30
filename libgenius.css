@@ -91,6 +91,14 @@ div#records {
   justify-content: flex-start;
 }
 
+.modal img {
+    width: 200px;
+    height: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 150px;
+}
+
 h1, h2, footer, div#result {
   color: white;
   font-weight: 100;
