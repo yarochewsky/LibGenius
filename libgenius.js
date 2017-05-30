@@ -1,7 +1,5 @@
 /*
-CSE 154: Creative Project Ajax
 Name: Daniel Fonseca Yarochewsky
-TA: Kyle
 This app searches and displays results of films available at UW Library
 Special Collections
 */
