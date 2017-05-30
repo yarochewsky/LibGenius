@@ -87,6 +87,7 @@ Special Collections
     $("results").classList.remove("hidden");
     $("query").classList.remove("search-onboard-mode");
     $("query").classList.add("search-results-mode");
+    $("beta").classList.remove("hidden");
     document.body.style.backgroundImage = "none";
   }
 
