@@ -43,7 +43,6 @@ Special Collections
     if(queryString) {
       setResultsView();
       $("loading").classList.remove("hidden");
-      var processedQueryString = queryString.replace(/ /g, "+");
       var collectionInfo = getCollectionSize(collectionName);
       collectionInfo
         .then(function(collectionSize) {
@@ -138,7 +137,7 @@ Special Collections
     info.appendChild(modalLoadingAnimation);
 
     var openButton = document.createElement("button");
-    openButton.innerText = "More";
+    openButton.textContent = "More";
     openButton.classList.add("modal-open");
 
     var modalContent = null;
@@ -154,27 +153,51 @@ Special Collections
           .then(function(response) {
             modalContent = document.createElement("div");
             modalContent.classList.add("modal-content");
+            var content = {};
+            content['Title'] = response.title;
+            content['Summary'] = response.clip;
+            content['Duration'] = response.durati;
+            content['Source of the Clip'] = response.creato;
+            content['Participants/Performers'] = response.partic;
+            content['Notes'] = response.notes;
+            content['Subjects (LCSH)'] = response.subjea;
+            content['Location Depicted"'] = response.locati;
+            content['Date Created'] = response.type;
+            content['Language'] = response.langub;
+            content['Digital Collection'] = response.digita;
+            content['Order Number'] = response.order;
+            content['Ordering Information'] = response.orderi;
+            content['Repository'] = response.reposi;
+            content['Repository Collection'] = response.reposa;
+            content['Repository Collection Guide'] = response.reposb;
+            content['Digital Reproduction Information'] =  response.digitb;
+            content['Rights'] = response.righta;
+            content['Type'] = response.typa;
+            var titleSpan = document.createElement("div");
+            titleSpan.innerHTML = title;
+            titleSpan.classList.add("clip-title");
+            modalContent.appendChild(titleSpan);
 
-            var fileSize = response.cdmfilesizeformatted;
-            var source = response.creato;
-            var digitalCollection = response.digita;
-            var digitalReproduction = response.digitb;
-            var language = response.langub;
-            var location = response.locati;
-            var date = response.type;
-            var order = response.order;
-            var reproductionMessage = response.orderi;
-            var copyright = response.righta;
+            var metadata = document.createElement("table");
 
-            if(response.clip.length > 0) {
-              modalContent.innerHTML += response.clip;
-            } else {
-              modalContent.innerHTML += response.filmvi;
+            var contentKeys = Object.keys(content);
+            for(var i = 0; i < contentKeys.length; i++) {
+              // add data if it's and object, and it has any data, or
+              // if it's just a string
+              if((content[contentKeys[i]].constructor == Object &&
+                  Object.keys(content[contentKeys[i]]).length) ||
+                  (content[contentKeys[i]].constructor == String)) {
+                var item = document.createElement("tr");
+                var category = document.createElement("td");
+                category.innerHTML = contentKeys[i];
+                item.appendChild(category);
+                var categoryText = document.createElement("td");
+                categoryText.innerHTML = content[contentKeys[i]];
+                item.appendChild(categoryText);
+                metadata.appendChild(item);
+              }
             }
-            var itemKeys = Object.keys(response);
-            for(var i = 0; i < itemKeys.length; i++) {
-              modalContent.innerHTML += response[itemKeys[i]];
-            }
+            modalContent.appendChild(metadata);
             info.appendChild(modalContent);
             modalLoadingAnimation.classList.toggle("hidden");
           })
@@ -186,7 +209,7 @@ Special Collections
 
 
     var playButton = document.createElement("button");
-    playButton.innerText = "Play";
+    playButton.textContent = "Play";
     playButton.classList.add("modal-open");
 
     var videoSrc = play(item.pointer);
@@ -226,7 +249,7 @@ Special Collections
     info.appendChild(closeButton);
 
     var downloadButton = document.createElement("button");
-    downloadButton.innerText = "Download";
+    downloadButton.textContent = "Download";
     downloadButton.classList.add("modal-open");
     itemContainerDescription.appendChild(downloadButton);
     downloadButton.onclick = function() {
@@ -257,8 +280,8 @@ Special Collections
   // and find property.
   function retrieveRecords(queryString, collectionName, collectionSize) {
     var endpointString = ("dmQuery/" + collectionName + "/CISOSEARCHALL^"
-                          + queryString + "^all^and/!title!clip!filmvi/nosort/" + collectionSize
-                          + "/0/1/0/1//0/0/0/json"
+                          + queryString + "^all^and/!title!clip!filmvi/nosort/"
+                          + collectionSize + "/0/1/0/1//0/0/0/json"
                           );
     var serverString = API_URL + endpointString;
     var requestRecord = new AjaxGetPromise("server.php?url=" + serverString);

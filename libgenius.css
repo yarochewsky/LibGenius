@@ -15,6 +15,25 @@ body {
   flex-direction: column;
 }
 
+div.clip-title {
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+td {
+  overflow: hidden;
+  max-width: 500px;
+  text-overflow: ellipsis;
+}
+
+table {
+  font-size: 15pt;
+  margin-top: 30px;
+  text-align: left;
+  padding: 3px;
+  border-spacing: 20px;
+}
+
 img#beta {
   width: 300px;
   position: absolute;
