@@ -4,6 +4,8 @@ This app searches and displays results of films available at UW Library
 Special Collections
 */
 
+// last updated 3:29
+
 (function() {
 
   "use strict";
@@ -154,7 +156,6 @@ Special Collections
             modalContent = document.createElement("div");
             modalContent.classList.add("modal-content");
             var content = {};
-            content['Title'] = response.title;
             content['Summary'] = response.clip;
             content['Duration'] = response.durati;
             content['Source of the Clip'] = response.creato;
@@ -192,7 +193,16 @@ Special Collections
                 category.innerHTML = contentKeys[i];
                 item.appendChild(category);
                 var categoryText = document.createElement("td");
-                categoryText.innerHTML = content[contentKeys[i]];
+                var contentString = content[contentKeys[i]];
+                var patternSite = /http(s)?:\/\/www(\.[a-z]*)*([\/a-z\.])*/i;
+                var matchedSite = patternSite.exec(contentString);
+                // insert links on the content text where appropriate
+                if(matchedSite) {
+                  var linkedText = ("<a href=" + matchedSite[0] + " >" +
+                                    matchedSite[0] + "</a>");
+                  contentString = contentString.replace(patternSite, linkedText);
+                }
+                categoryText.innerHTML = contentString;
                 item.appendChild(categoryText);
                 metadata.appendChild(item);
               }
@@ -243,8 +253,10 @@ Special Collections
       if(modalContent) {
         modalContent.classList.add("hidden");
       }
-      video.classList.add("hidden");
       video.pause();
+      video.src = "";
+      // video.stopVideo();
+      video.classList.add("hidden");
     };
     info.appendChild(closeButton);
 

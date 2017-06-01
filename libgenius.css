@@ -26,6 +26,16 @@ td {
   text-overflow: ellipsis;
 }
 
+a {
+    color: #ffa6a6;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
 table {
   font-size: 15pt;
   margin-top: 30px;
