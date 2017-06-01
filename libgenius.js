@@ -193,7 +193,7 @@ Special Collections
                 item.appendChild(category);
                 var categoryText = document.createElement("td");
                 var contentString = content[contentKeys[i]];
-                var patternSite = /http(s)?:\/\/www(\.[a-z]*)*([\/a-z\.])*/i;
+                var patternSite = /http(s)?:\/\/www(\.[a-z]*)*([\/a-z\._])*/i;
                 var matchedSite = patternSite.exec(contentString);
                 // insert links on the content text where appropriate
                 if(matchedSite) {
