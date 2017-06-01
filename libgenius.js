@@ -161,7 +161,7 @@ Special Collections
             content['Participants/Performers'] = response.partic;
             content['Notes'] = response.notes;
             content['Subjects (LCSH)'] = response.subjea;
-            content['Location Depicted"'] = response.locati;
+            content['Location Depicted'] = response.locati;
             content['Date Created'] = response.type;
             content['Language'] = response.langub;
             content['Digital Collection'] = response.digita;
