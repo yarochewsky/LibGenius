@@ -10,7 +10,6 @@ Special Collections
 
   "use strict";
 
-  var API_URL = "https://server16786.contentdm.oclc.org/dmwebservices/index.php?q=";
   var API_SITE = "https://cdm16786.contentdm.oclc.org/utils/";
   var collectionName = "filmarch";
 
@@ -295,8 +294,7 @@ Special Collections
                           + queryString + "^all^and/!title!clip!filmvi/nosort/"
                           + collectionSize + "/0/1/0/1//0/0/0/json"
                           );
-    var serverString = API_URL + endpointString;
-    var requestRecord = new AjaxGetPromise("server.php?url=" + serverString);
+    var requestRecord = new AjaxGetPromise("server.php?url=" + endpointString);
     return requestRecord
       .then(function(response) {
         return JSON.parse(response);
@@ -309,8 +307,7 @@ Special Collections
   // given a collection name, retrieves how many items are there
   function getCollectionSize(collectionName) {
     var endpointString = ("dmQuery/" + collectionName + "/json");
-    var serverString = API_URL + endpointString;
-    var getCollectionInfo = new AjaxGetPromise("server.php?url=" + serverString);
+    var getCollectionInfo = new AjaxGetPromise("server.php?url=" + endpointString);
     return getCollectionInfo
       .then(function(response) {
         var records = JSON.parse(response).pager.total;
@@ -324,8 +321,7 @@ Special Collections
     function getItemInfo(collectionName, itemPointer) {
       var endpointString = ("dmGetItemInfo/" + collectionName + "/" +
                             itemPointer + "/json");
-      var serverString = API_URL + endpointString;
-      var itemRequest = new AjaxGetPromise("server.php?url=" + serverString);
+      var itemRequest = new AjaxGetPromise("server.php?url=" + endpointString);
       return itemRequest
         .then(function(response) {
           return JSON.parse(response);
