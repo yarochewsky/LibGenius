@@ -50,17 +50,16 @@
     if(queryString) {
       setResultsView();
       $("loading").classList.remove("hidden");
-      var collectionInfo = getCollectionSize(collectionName);
+      var collectionInfo = getCollectionSize(COLLECTION_NAME);
       collectionInfo
         .then(function(collectionSize) {
-          var items = retrieveRecords(queryString, collectionName,
+          var items = retrieveRecords(queryString, COLLECTION_NAME,
                                       collectionSize);
           items
             .then(function(matches) {
               // clear previous results, if any
               $("records").innerHTML = "";
-              var resultsPhrasing = (matches.records.length == 1) ?
-                                     (" result" : " results");
+              var resultsPhrasing = (matches.records.length == 1) ? " result" : " results";
               $("number-found").innerHTML = (matches.records.length +
                                              resultsPhrasing);
               for(var i = 0; i < matches.records.length; i++) {
@@ -314,7 +313,7 @@
   // a DOM div, and creates the DOM structure for the "More" container when
   // the button "More" is clicked.
   function openMoreInformation(modalContent, itemId, info) {
-    var itemMetadata = getItemInfo(collectionName, itemId);
+    var itemMetadata = getItemInfo(COLLECTION_NAME, itemId);
     return itemMetadata
       .then(function(response) {
         modalContent = document.createElement("div");
@@ -409,7 +408,7 @@
   // calculates and returns an item's thumbnail image url, to be sourced into
   // an image tag.
   function getImagePath(itemId) {
-    return (API_SITE + "getthumbnail/collection/" + COLLECTION_NAME "/id/" +
+    return (API_SITE + "getthumbnail/collection/" + COLLECTION_NAME + "/id/" +
             itemId + "/json");
   }
 
