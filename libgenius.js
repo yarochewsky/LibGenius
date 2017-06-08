@@ -12,8 +12,9 @@
 
     // update here the API urls as they change
     var API_SITE = "https://cdm16786.contentdm.oclc.org/utils/";
-    var API_SERVER = "https://server16786.contentdm.oclc.org/dmwebservices/index.php?q=dmGetStreamingFile/filmarch/";
-    var collectionName = "filmarch";
+    var COLLECTION_NAME  = "filmarch";
+    var API_SERVER = ("https://server16786.contentdm.oclc.org/dmwebservices/index.php?q=dmGetStreamingFile/" +
+                      COLLECTION_NAME  + "/");
 
     var $ = function(id) { return document.getElementById(id); };
     var qs = function(query) { return document.querySelector(query); };
@@ -408,7 +409,8 @@
   // calculates and returns an item's thumbnail image url, to be sourced into
   // an image tag.
   function getImagePath(itemId) {
-    return (API_SITE + "getthumbnail/collection/filmarch/id/" + itemId + "/json");
+    return (API_SITE + "getthumbnail/collection/" + COLLECTION_NAME "/id/" +
+            itemId + "/json");
   }
 
   // given an item unique identifier, retrieves and returns the url of the image
@@ -437,7 +439,8 @@
   // with filename as stored in the collection, and saving it to client's
   // browser downloads destination i.e its downloads folder.
   function download(itemId) {
-    var endpointString = ("getfile/collection/filmarch/id/" + itemId);
+    var endpointString = ("getfile/collection/" + COLLECTION_NAME +
+                          "/id/" + itemId);
     var fileSource = API_SITE + endpointString;
     window.location = fileSource;
   }
