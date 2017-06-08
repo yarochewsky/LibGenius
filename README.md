@@ -9,4 +9,4 @@ This is a webapp for retrieving, streaming and downloading videos from the Unive
 
 It's a proof of concept redesign of the old, and hefty interface, for a smoother, and faster UI. Enjoy.
 
-Project is also hosted under: students.washington.edu/yaro2015/libgenius (as of Junde 8, 17) 
+Project is also hosted under: students.washington.edu/yaro2015/libgenius (as of June 8, 17) 
