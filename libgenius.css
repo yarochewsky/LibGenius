@@ -222,7 +222,10 @@ input.search, record-title {
 
 .record-title-overlay {
   position: relative;
-  background-color: rgba(0, 0, 0, 0.2)
+  background-color: rgba(0, 0, 0, 0.2);
+  max-height: 200px;
+  text-overflow: clip;
+  overflow: hidden;
 }
 
 span.record-title {
